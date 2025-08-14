@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL (partagée)
+  supabase-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # Supabase services
+  supabase-studio:
+    image: supabase/studio:latest
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      SUPABASE_URL: http://supabase-kong:8000
+      POSTGRES_PASSWORD: password
+
+  supabase-kong:
+    image: kong:2.8.1
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+    volumes:
+      - ./supabase/docker/volumes/api/kong.yml:/var/lib/kong/kong.yml
+    depends_on:
+      - supabase-db
+
+  # Notre API Backend
+  backend:
+    build: ./backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:password@supabase-db:5432/postgres
+    depends_on:
+      - supabase-db
+
+volumes:
+  db_data:
