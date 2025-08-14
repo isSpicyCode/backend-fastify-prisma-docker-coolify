@@ -1,4 +1,3 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
 # README
 
@@ -51,8 +50,4 @@ Pour tester le déploiement automatique sur Coolify :
 - Cliquer sur **Deploy** dans l’interface Coolify
 
 Le déploiement générera automatiquement des URLs publiques et gérera SSL, monitoring et rollbacks.
-
-***
-
-> Cette configuration minimaliste te permet de **tester rapidement** Docker Compose, Supabase self-hosted, Fastify/Prisma et Coolify en moins de 10 minutes.
 
